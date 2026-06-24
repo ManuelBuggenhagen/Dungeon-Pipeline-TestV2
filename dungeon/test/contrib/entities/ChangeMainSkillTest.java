@@ -4,8 +4,15 @@ import contrib.utils.components.skill.Skill;
 import core.Entity;
 import contrib.components.SkillComponent;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
@@ -15,6 +22,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+
+/**
+ * Test für HeroController.changeMainSkill()
+ */
 public class ChangeMainSkillTest {
   @Mock
   private Entity mockHero;
@@ -109,7 +120,7 @@ public class ChangeMainSkillTest {
   }
 
   @Test
-  void  changeMainSkill_LastSkillAndNextSkill_WrapsFirstSkill() {
+  void changeMainSkill_LastSkillAndNextSkill_WrapsFirstSkill() {
     // Arrange
     realSkillComponent.nextMainSkill(); //letzter Skill
 
@@ -129,7 +140,7 @@ public class ChangeMainSkillTest {
   }
 
   @Test
-  void changeMAinSkill_WithNullHero_ThrowsNullPointerException() {
+  void changeMainSkill_WithNullHero_ThrowsNullPointerException() {
     // Arrange
     Entity nullHero = null;
 
