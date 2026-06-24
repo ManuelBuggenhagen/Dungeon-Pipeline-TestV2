@@ -1,12 +1,7 @@
 package contrib.entities;
 
-import contrib.utils.components.skill.Skill;
-import core.Entity;
-import contrib.components.SkillComponent;
-
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -14,24 +9,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import contrib.components.SkillComponent;
+import contrib.utils.components.skill.Skill;
+import core.Entity;
 import java.util.Optional;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
-/**
- * Test für HeroController.changeMainSkill()
- */
+/** Test für HeroController.changeMainSkill() */
 public class ChangeMainSkillTest {
-  @Mock
-  private Entity mockHero;
+  @Mock private Entity mockHero;
 
-  @Mock
-  private SkillComponent mockSkillComponent;
+  @Mock private SkillComponent mockSkillComponent;
 
   private Entity heroWithRealSkillComponent;
   private SkillComponent realSkillComponent;
@@ -46,13 +38,13 @@ public class ChangeMainSkillTest {
 
     firstSkill = mock(Skill.class);
     lastSkill = mock(Skill.class);
-    Skill middleSkill  = mock(Skill.class);
-
+    Skill middleSkill = mock(Skill.class);
 
     realSkillComponent = new SkillComponent(firstSkill, middleSkill, lastSkill);
     heroWithRealSkillComponent = mock(Entity.class);
 
-    when(heroWithRealSkillComponent.fetch(SkillComponent.class)).thenReturn(Optional.of(realSkillComponent));
+    when(heroWithRealSkillComponent.fetch(SkillComponent.class))
+        .thenReturn(Optional.of(realSkillComponent));
     when(heroWithRealSkillComponent.id()).thenReturn(1);
   }
 
@@ -67,10 +59,10 @@ public class ChangeMainSkillTest {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
     when(mockHero.id()).thenReturn(1);
 
-    //Act
+    // Act
     HeroController.changeMainSkill(mockHero, true);
 
-    //Assert
+    // Assert
     verify(mockSkillComponent, times(1)).nextMainSkill();
     verify(mockSkillComponent, never()).prevMainSkill();
   }
@@ -81,10 +73,10 @@ public class ChangeMainSkillTest {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
     when(mockHero.id()).thenReturn(1);
 
-    //Act
+    // Act
     HeroController.changeMainSkill(mockHero, false);
 
-    //Assert
+    // Assert
     verify(mockSkillComponent, times(1)).prevMainSkill();
     verify(mockSkillComponent, never()).nextMainSkill();
   }
@@ -95,10 +87,10 @@ public class ChangeMainSkillTest {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.empty());
     when(mockHero.id()).thenReturn(1);
 
-    //Act
+    // Act
     HeroController.changeMainSkill(mockHero, true);
 
-    //Assert
+    // Assert
     verify(mockHero, times(1)).fetch(SkillComponent.class);
     verifyNoInteractions(mockSkillComponent);
   }
@@ -109,12 +101,12 @@ public class ChangeMainSkillTest {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
     when(mockHero.id()).thenReturn(1);
 
-    //Act
+    // Act
     HeroController.changeMainSkill(mockHero, true);
     HeroController.changeMainSkill(mockHero, true);
     HeroController.changeMainSkill(mockHero, false);
 
-    //Assert
+    // Assert
     verify(mockSkillComponent, times(2)).nextMainSkill();
     verify(mockSkillComponent, times(1)).prevMainSkill();
   }
@@ -122,14 +114,15 @@ public class ChangeMainSkillTest {
   @Test
   void changeMainSkill_LastSkillAndNextSkill_WrapsFirstSkill() {
     // Arrange
-    realSkillComponent.nextMainSkill(); //letzter Skill
+    realSkillComponent.nextMainSkill(); // letzter Skill
 
     // Act
-    HeroController.changeMainSkill(heroWithRealSkillComponent,true);
+    HeroController.changeMainSkill(heroWithRealSkillComponent, true);
 
     // Assert
     assertSame(firstSkill, realSkillComponent.activeMainSkill().orElseThrow());
   }
+
   @Test
   void changeMainSkill_FirstSkillAndPrevSkill_WrapToLastSkill() {
     // Act
@@ -144,12 +137,7 @@ public class ChangeMainSkillTest {
     // Arrange
     Entity nullHero = null;
 
-    //Act & Assert
-    assertThrows(
-      NullPointerException.class,
-      () -> HeroController.changeMainSkill(nullHero, true)
-    );
+    // Act & Assert
+    assertThrows(NullPointerException.class, () -> HeroController.changeMainSkill(nullHero, true));
   }
-
-
 }
