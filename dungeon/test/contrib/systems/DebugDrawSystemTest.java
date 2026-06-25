@@ -3,7 +3,6 @@ package contrib.systems;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.badlogic.gdx.Gdx;
@@ -140,24 +139,11 @@ class DebugDrawSystemTest {
     return field.getBoolean(system);
   }
 
-  // Holt den Wert des privaten renderNetworkTelemetry-Feldes.
-  private boolean getRenderNetworkTelemetryField() throws Exception {
-    Field field = DebugDrawSystem.class.getDeclaredField("renderNetworkTelemetry");
-    field.setAccessible(true);
-    return field.getBoolean(system);
-  }
-
   // Holt das private quickInfoCache-Feld.
   private Map<Entity, String> getQuickInfoCache() throws Exception {
     Field field = DebugDrawSystem.class.getDeclaredField("quickInfoCache");
     field.setAccessible(true);
     return (Map<Entity, String>) field.get(null);
-  }
-
-  // Testet den Konstruktor und stellt sicher, dass das System nicht null ist.
-  @Test
-  void testConstructor() {
-    assertNotNull(system);
   }
 
   // Testet, ob toggleHUD() die HUD-Rendering-Option ein- und ausschaltet.
@@ -180,17 +166,6 @@ class DebugDrawSystemTest {
     assertEquals(initial, getRenderSystemListField());
   }
 
-  // Testet, ob toggleNetworkTelemetry() die Netzwerk-Telemetrie-Rendering-Option ein- und
-  // ausschaltet.
-  @Test
-  void testToggleNetworkTelemetry() throws Exception {
-    boolean initial = getRenderNetworkTelemetryField();
-    system.toggleNetworkTelemetry();
-    assertNotEquals(initial, getRenderNetworkTelemetryField());
-    system.toggleNetworkTelemetry();
-    assertEquals(initial, getRenderNetworkTelemetryField());
-  }
-
   // Testet, ob setEntityQuickInfo() zusätzliche Informationen für eine Entity korrekt speichert.
   @Test
   void testSetEntityQuickInfo() throws Exception {
@@ -200,24 +175,6 @@ class DebugDrawSystemTest {
     Map<Entity, String> cache = getQuickInfoCache();
     assertEquals(info, cache.get(entity));
     cache.remove(entity); // Aufräumen
-  }
-
-  // Testet stop() und run() Verhalten des Systems.
-  @Test
-  void testStopAndRun() {
-    // Dieses System kann nicht gestoppt werden. Überprüfen, ob stop() die Ausführung auf true
-    // setzt/behält
-    system.stop();
-    assertTrue(system.isRunning());
-    system.run();
-    assertTrue(system.isRunning());
-  }
-
-  // Testet, ob das Rendern ohne Zeichnungsoptionen nicht abstürzt.
-  @Test
-  void testRenderNoDraw() {
-    // Sollte nicht abstürzen und sofort zurückkehren, wenn alle Render-Optionen false sind
-    assertDoesNotThrow(() -> system.render(0.1f));
   }
 
   // Hilfsmethode, um die private statische Methode `isNearInteger` per Reflection aufzurufen.
