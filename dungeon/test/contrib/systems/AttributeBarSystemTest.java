@@ -211,20 +211,16 @@ class AttributeBarSystemTest {
     entity.add(hc);
     system.execute();
 
-    assertTrue(
-        Game.allEntities().anyMatch(e -> e.name().equals("healthbar_" + entity.id())));
-    assertFalse(
-        Game.allEntities().anyMatch(e -> e.name().equals("manabar_" + entity.id())));
+    assertTrue(Game.allEntities().anyMatch(e -> e.name().equals("healthbar_" + entity.id())));
+    assertFalse(Game.allEntities().anyMatch(e -> e.name().equals("manabar_" + entity.id())));
 
     // Add new component
     ManaComponent mc = new ManaComponent(100f, 50f, 1f);
     entity.add(mc);
     system.execute();
 
-    assertTrue(
-        Game.allEntities().anyMatch(e -> e.name().equals("healthbar_" + entity.id())));
-    assertTrue(
-        Game.allEntities().anyMatch(e -> e.name().equals("manabar_" + entity.id())));
+    assertTrue(Game.allEntities().anyMatch(e -> e.name().equals("healthbar_" + entity.id())));
+    assertTrue(Game.allEntities().anyMatch(e -> e.name().equals("manabar_" + entity.id())));
   }
 
   /**
