@@ -1,10 +1,11 @@
 package contrib.systems;
 
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.components.CollideComponent;
 import contrib.utils.components.collide.Collider;
 import contrib.utils.components.collide.CollisionUtils;
 import core.Entity;
-import core.Game;
 import core.System;
 import core.components.PlayerComponent;
 import core.components.PositionComponent;
@@ -35,6 +36,7 @@ import java.util.stream.Stream;
 public final class CollisionSystem extends System {
 
   private static final DungeonLogger LOGGER = DungeonLogger.getLogger(CollisionSystem.class);
+  private final GameProvider game;
 
   /**
    * If true, players will collide with each other. If false, players will pass through each other.
@@ -46,9 +48,12 @@ public final class CollisionSystem extends System {
 
   private final Map<CollisionKey, CollisionData> collisions = new HashMap<>();
 
+  public CollisionSystem(){this(new DefaultGameProvider());}
+
   /** Create a new CollisionSystem. */
-  public CollisionSystem() {
+  public CollisionSystem(GameProvider game) {
     super(CollideComponent.class);
+    this.game = game;
     onEntityAdd = this::onAddEntity;
     onEntityRemove = this::onRemoveEntity;
   }
@@ -73,7 +78,7 @@ public final class CollisionSystem extends System {
 
     // iterate over ALL entities, so collisions will be resolved if a new level was loaded
     Entity other =
-        Game.allEntities().filter(entity -> entity.id() == otherId).findFirst().orElse(null);
+        game.allEntities().filter(entity -> entity.id() == otherId).findFirst().orElse(null);
 
     if (other == null) return;
     // Trigger onLeave for both entities

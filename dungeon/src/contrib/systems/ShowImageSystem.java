@@ -1,12 +1,13 @@
 package contrib.systems;
 
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.components.ShowImageComponent;
 import contrib.components.UIComponent;
 import contrib.hud.dialogs.DialogContext;
 import contrib.hud.dialogs.DialogContextKeys;
 import contrib.hud.dialogs.DialogType;
 import core.Entity;
-import core.Game;
 import core.System;
 import core.components.DrawComponent;
 import core.components.PositionComponent;
@@ -17,12 +18,17 @@ import core.components.PositionComponent;
  */
 public class ShowImageSystem extends System {
 
+  private final GameProvider game;
+
+  public ShowImageSystem() {this(new DefaultGameProvider());}
+
   /**
    * Creates a new ShowImageSystem that processes entities with ShowImageComponent, DrawComponent,
    * and PositionComponent.
    */
-  public ShowImageSystem() {
+  public ShowImageSystem(GameProvider game) {
     super(ShowImageComponent.class, DrawComponent.class, PositionComponent.class);
+    this.game = game;
   }
 
   @Override
@@ -59,12 +65,12 @@ public class ShowImageSystem extends System {
           });
       newOverlay.add(uic);
       d.sic.overlay(newOverlay);
-      Game.add(newOverlay);
+      game.add(newOverlay);
       d.sic.onOpen(d.e, newOverlay);
 
     } else if (overlay != null && !d.sic.isUIOpen()) {
       // Dialog is open but should be closed
-      Game.remove(overlay);
+      game.remove(overlay);
       d.sic.overlay(null);
     }
   }

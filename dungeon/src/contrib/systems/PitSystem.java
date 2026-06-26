@@ -1,11 +1,12 @@
 package contrib.systems;
 
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.components.AIComponent;
 import contrib.components.CollideComponent;
 import contrib.components.FlyComponent;
 import contrib.components.ProjectileComponent;
 import core.Entity;
-import core.Game;
 import core.System;
 import core.components.CameraComponent;
 import core.components.PlayerComponent;
@@ -26,13 +27,17 @@ import java.util.Map;
  */
 public class PitSystem extends System {
   private final Map<PitTile, Long> pitTimes = new HashMap<>();
+  private final GameProvider game;
+
+  public PitSystem(){this(new DefaultGameProvider());}
 
   /**
    * Constructor for the PitSystem class. This system processes entities with the PositionComponent
    * and VelocityComponent.
    */
-  public PitSystem() {
+  public PitSystem(GameProvider game) {
     super(PositionComponent.class, VelocityComponent.class, CollideComponent.class);
+    this.game = game;
   }
 
   @Override
@@ -95,6 +100,6 @@ public class PitSystem extends System {
             .fetch(CollideComponent.class)
             .orElseThrow(() -> MissingComponentException.build(entity, CollideComponent.class));
     Point center = cc.collider().absoluteCenter();
-    return Game.tileAt(center).orElse(null);
+    return game.tileAt(center).orElse(null);
   }
 }

@@ -2,6 +2,8 @@ package contrib.utils.systems.levelEditor;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.hud.dialogs.DialogFactory;
 import contrib.systems.DebugDrawSystem;
 import contrib.systems.LevelEditorSystem;
@@ -17,12 +19,17 @@ import java.util.Optional;
 /** The PointMode allows the user to place, pick up, and delete named points in the level editor. */
 public class PointMode extends LevelEditorMode {
 
+  private final GameProvider game;
+
   private static SnapMode snapMode = SnapMode.OnGrid;
   private static String heldPointName = null;
 
+  public PointMode() {this(new DefaultGameProvider());}
+
   /** Constructs a new PointMode. */
-  public PointMode() {
+  public PointMode(GameProvider game) {
     super("Point Mode");
+    this.game = game;
   }
 
   @Override
@@ -81,7 +88,7 @@ public class PointMode extends LevelEditorMode {
 
   @Override
   public void render() {
-    DebugDrawSystem.drawNamedPoints(heldPointName, true);
+    DebugDrawSystem.drawNamedPoints(heldPointName, true, this.game);
   }
 
   @Override

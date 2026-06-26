@@ -2,10 +2,11 @@ package contrib.systems;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.components.UIComponent;
 import contrib.hud.UIUtils;
 import core.Entity;
-import core.Game;
 import core.System;
 import core.components.PlayerComponent;
 import core.game.PreRunConfiguration;
@@ -40,11 +41,16 @@ public final class HudSystem extends System {
 
   private final Map<Entity, UIComponent> entityUIComponentMap = new HashMap<>();
 
+  private final GameProvider game;
+
+  public HudSystem() {this(new DefaultGameProvider());}
+
   /** Create a new HudSystem. */
-  public HudSystem() {
+  public HudSystem(GameProvider game) {
     super(AuthoritativeSide.BOTH, UIComponent.class);
     onEntityAdd = this::addListener;
     onEntityRemove = this::removeListener;
+    this.game = game;
   }
 
   /**
@@ -91,7 +97,7 @@ public final class HudSystem extends System {
 
     if (targets.length == 0) {
       // if no specific targets, decrease for all players
-      Game.allPlayers()
+      game.allPlayers()
           .forEach(
               playerEntity -> {
                 playerEntity
@@ -100,7 +106,7 @@ public final class HudSystem extends System {
               });
     } else {
       for (Integer targetId : targets) {
-        Optional<Entity> target = Game.findEntityById(targetId);
+        Optional<Entity> target = game.findEntityById(targetId);
         target
             .flatMap(t -> t.fetch(PlayerComponent.class))
             .ifPresent(PlayerComponent::decrementOpenDialogs);
@@ -123,7 +129,7 @@ public final class HudSystem extends System {
     Group dialog = component.dialog();
 
     // check if we should draw it
-    int[] myIds = Game.allPlayers().mapToInt(Entity::id).toArray();
+    int[] myIds = game.allPlayers().mapToInt(Entity::id).toArray();
     int[] targetIds = component.targetEntityIds();
     int[] affectedIds =
         Arrays.stream(myIds)
@@ -137,13 +143,13 @@ public final class HudSystem extends System {
 
     // increase open dialog count for all target entities
     for (Integer targetId : targetIds) {
-      Optional<Entity> target = Game.findEntityById(targetId);
+      Optional<Entity> target = game.findEntityById(targetId);
       target
           .flatMap(t -> t.fetch(PlayerComponent.class))
           .ifPresent(PlayerComponent::incrementOpenDialogs);
     }
 
-    Game.stage()
+    game.stage()
         .ifPresentOrElse(
             stage -> addDialogToStage(dialog, stage),
             () -> sendDialogToClients(entity, component, affectedIds));
@@ -151,7 +157,7 @@ public final class HudSystem extends System {
     addMapping(entity, dialog, component);
     // Multiplayer clients only render dialogs. The server keeps callback ownership and
     // response authorization in DialogTracker.
-    if (!Game.isMultiplayerClient()) {
+    if (!game.isMultiplayerClient()) {
       DialogTracker.instance().registerDialog(component);
     }
   }
@@ -181,7 +187,7 @@ public final class HudSystem extends System {
     DialogShowMessage msg =
         new DialogShowMessage(component.dialogContext(), component.canBeClosed());
     for (short clientId : clientIds) {
-      Game.network().send(clientId, msg, true);
+      game.network().send(clientId, msg, true);
     }
   }
 
@@ -231,7 +237,7 @@ public final class HudSystem extends System {
     LOGGER.info("Pausing game due to open UI");
     ipaused = true;
     if (PreRunConfiguration.multiplayerEnabled()) return; // don't pause in multiplayer mode
-    Game.systems().values().forEach(System::stop);
+    game.systems().values().forEach(System::stop);
   }
 
   private void unpauseGame() {
@@ -240,7 +246,7 @@ public final class HudSystem extends System {
       ipaused = false;
       return; // don't pause in multiplayer mode
     }
-    if (ipaused) Game.systems().values().forEach(System::run);
+    if (ipaused) game.systems().values().forEach(System::run);
     ipaused = false;
   }
 

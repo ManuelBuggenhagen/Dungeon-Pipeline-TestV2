@@ -1,8 +1,9 @@
 package contrib.systems;
 
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.utils.EntityUtils;
 import core.Entity;
-import core.Game;
 import core.System;
 import core.components.DrawComponent;
 import core.components.PositionComponent;
@@ -48,6 +49,16 @@ public class FogSystem extends System {
   private final Map<Tile, Integer> darkenedTiles = new HashMap<>();
   private final List<Entity> hiddenEntities = new ArrayList<>();
   private boolean active = true;
+
+  GameProvider game;
+
+  public FogSystem(GameProvider game){
+    this.game = game;
+  }
+
+  public FogSystem(){
+    this(new DefaultGameProvider());
+  }
 
   /**
    * Resets the FogSystem.
@@ -173,10 +184,10 @@ public class FogSystem extends System {
         } else {
           // Our light beam is touching this square; light it
           if (dx * dx + dy * dy < radius * radius) {
-            Tile tile = Game.tileAt(new Point(X, Y)).orElse(null);
+            Tile tile = game.tileAt(new Point(X, Y)).orElse(null);
             visibleTiles.add(tile);
           }
-          Tile tile = Game.tileAt(new Point(X, Y)).orElse(null);
+          Tile tile = game.tileAt(new Point(X, Y)).orElse(null);
           if (tile == null) {
             continue;
           }
@@ -257,7 +268,7 @@ public class FogSystem extends System {
   private void hideAllHiddenEntities() {
     darkenedTiles.keySet().stream()
         .filter(tile -> tile.tintColor() < HIDE_ENTITY_THRESHOLD)
-        .flatMap(Game::entityAtTile)
+        .flatMap(game::entityAtTile)
         .filter(entity -> entity.isPresent(DrawComponent.class))
         .forEach(
             entity -> {
@@ -277,7 +288,7 @@ public class FogSystem extends System {
           entity
               .fetch(PositionComponent.class)
               .orElseThrow(() -> MissingComponentException.build(entity, PositionComponent.class));
-      Tile tile = Game.tileAt(pc.position()).orElse(null);
+      Tile tile = game.tileAt(pc.position()).orElse(null);
       if (!darkenedTiles.containsKey(tile) || tile.tintColor() >= HIDE_ENTITY_THRESHOLD) {
         DrawComponent dc =
             entity
@@ -302,7 +313,7 @@ public class FogSystem extends System {
     revertTilesBackToLight(tilesOutsideView);
 
     List<Tile> visibleTiles = new ArrayList<>();
-    visibleTiles.add(Game.tileAt(playerPos).orElse(null));
+    visibleTiles.add(game.tileAt(playerPos).orElse(null));
     // Cast light into the surrounding tiles
     for (int octant = 0; octant < 8; octant++) {
       visibleTiles.addAll(

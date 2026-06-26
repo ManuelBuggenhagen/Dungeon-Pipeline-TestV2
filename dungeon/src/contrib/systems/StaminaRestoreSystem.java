@@ -1,7 +1,8 @@
 package contrib.systems;
 
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.components.StaminaComponent;
-import core.Game;
 import core.System;
 
 /**
@@ -13,13 +14,18 @@ import core.System;
  */
 public class StaminaRestoreSystem extends System {
 
+  private final GameProvider game;
+
+  public StaminaRestoreSystem() {this(new DefaultGameProvider());}
+
   /**
    * Creates a new {@code EnergyRestoreSystem}.
    *
    * <p>This system processes all entities that contain an {@link StaminaComponent}.
    */
-  public StaminaRestoreSystem() {
+  public StaminaRestoreSystem(GameProvider game) {
     super(StaminaComponent.class);
+    this.game = game;
   }
 
   /**
@@ -37,6 +43,6 @@ public class StaminaRestoreSystem extends System {
   public void execute() {
     filteredEntityStream()
         .flatMap(e -> e.fetch(StaminaComponent.class).stream())
-        .forEach(c -> c.restore(c.restorePerSecond() / Game.frameRate()));
+        .forEach(c -> c.restore(c.restorePerSecond() / game.frameRate()));
   }
 }

@@ -1,8 +1,9 @@
 package contrib.systems;
 
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.components.IdleSoundComponent;
 import core.Entity;
-import core.Game;
 import core.System;
 import core.components.PositionComponent;
 import core.sound.SoundSpec;
@@ -26,9 +27,14 @@ public final class IdleSoundSystem extends System {
   private static final float DISTANCE_THRESHOLD = 10.0f;
   private static final float CHANCE_TO_PLAY_SOUND = 0.001f;
 
+  private final GameProvider game;
+
+  public IdleSoundSystem() {this(new DefaultGameProvider());}
+
   /** Create a new {@link IdleSoundSystem}. */
-  public IdleSoundSystem() {
+  public IdleSoundSystem(GameProvider gameProvider) {
     super(IdleSoundComponent.class);
+    this.game = gameProvider;
   }
 
   private static boolean isEntityNearby(Point playerPos, Entity entity) {
@@ -46,7 +52,7 @@ public final class IdleSoundSystem extends System {
 
   @Override
   public void execute() {
-    Point playerPos = Game.player().flatMap(Game::positionOf).orElse(null);
+    Point playerPos = game.player().flatMap(game::positionOf).orElse(null);
     if (playerPos == null) {
       LOGGER.debug("No player position found, skipping IdleSoundSystem execution.");
       return;
@@ -65,7 +71,7 @@ public final class IdleSoundSystem extends System {
 
   private void playSound(final Entity idlingEntity, final IdleSoundComponent component) {
     if (RANDOM.nextFloat(0f, 1f) < CHANCE_TO_PLAY_SOUND) {
-      Game.audio().playOnEntity(idlingEntity, SoundSpec.builder(component.soundEffectId()));
+      game.audio().playOnEntity(idlingEntity, SoundSpec.builder(component.soundEffectId()));
     }
   }
 }

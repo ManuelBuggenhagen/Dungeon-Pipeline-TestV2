@@ -1,8 +1,9 @@
 package contrib.systems;
 
+import contrib.DefaultGameProvider;
+import contrib.GameProvider;
 import contrib.components.BlockComponent;
 import core.Entity;
-import core.Game;
 import core.System;
 import core.components.PositionComponent;
 import core.level.DungeonLevel;
@@ -30,29 +31,35 @@ import java.util.function.Consumer;
  */
 public final class BlockSystem extends System {
 
+  private GameProvider game;
+
   private HashMap<PositionComponent, Point> oldPositions;
   private final Consumer<Entity> onRemove =
       entity -> {
         BSData data = buildDataObject(entity);
         oldPositions.remove(data.pc);
-        ((DungeonLevel) Game.currentLevel().orElse(null))
-            .addToPathfinding(Game.tileAt(data.pc.position()).orElse(null));
+        ((DungeonLevel) game.currentLevel().orElse(null))
+            .addToPathfinding(game.tileAt(data.pc.position()).orElse(null));
       };
 
   private final Consumer<Entity> onAdd =
       entity -> {
         BSData data = buildDataObject(entity);
         oldPositions.put(data.pc, data.pc.position());
-        ((DungeonLevel) Game.currentLevel().orElse(null))
-            .removeFromPathfinding(Game.tileAt(data.pc.position()).orElse(null));
+        ((DungeonLevel) game.currentLevel().orElse(null))
+            .removeFromPathfinding(game.tileAt(data.pc.position()).orElse(null));
       };
 
+  public BlockSystem() {this(new DefaultGameProvider());}
+
   /** Creates a new BlockSystem. */
-  public BlockSystem() {
+  public BlockSystem(GameProvider game) {
     super(BlockComponent.class, PositionComponent.class);
+    this.game = game;
     this.onEntityAdd = onAdd;
     this.onEntityRemove = onRemove;
     oldPositions = new HashMap<>();
+
   }
 
   /**
@@ -79,10 +86,10 @@ public final class BlockSystem extends System {
     Point currentP = data.pc.position();
     Point oldP = oldPositions.get(data.pc);
     if (currentP.equals(oldP)) return;
-    ((DungeonLevel) Game.currentLevel().orElse(null))
-        .addToPathfinding(Game.tileAt(oldP).orElse(null));
-    ((DungeonLevel) Game.currentLevel().orElse(null))
-        .removeFromPathfinding(Game.tileAt(currentP).orElse(null));
+    ((DungeonLevel) game.currentLevel().orElse(null))
+        .addToPathfinding(game.tileAt(oldP).orElse(null));
+    ((DungeonLevel) game.currentLevel().orElse(null))
+        .removeFromPathfinding(game.tileAt(currentP).orElse(null));
     oldPositions.put(data.pc, currentP);
   }
 
