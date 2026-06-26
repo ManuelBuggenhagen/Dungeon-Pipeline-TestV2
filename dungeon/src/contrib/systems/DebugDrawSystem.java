@@ -88,9 +88,16 @@ public class DebugDrawSystem extends System {
   private boolean render = false;
   private boolean renderSystemList = false;
 
-  public DebugDrawSystem() {this(new DefaultGameProvider());}
+  /** Creates a new DebugDrawSystem with a DefaultGameProvider. */
+  public DebugDrawSystem() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Creates a new DebugDrawSystem. */
+  /**
+   * Creates a new DebugDrawSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
   public DebugDrawSystem(GameProvider game) {
     super(AuthoritativeSide.CLIENT, PositionComponent.class);
     this.game = game;
@@ -206,7 +213,11 @@ public class DebugDrawSystem extends System {
     if (CameraSystem.isEntityHovered(entity) && decoComponent.isEmpty()) drawEntityInfo(entity, pc);
   }
 
-  /** Draws named points from the current level. */
+  /**
+   * Draws named points from the current level.
+   *
+   * @param game The game provider to be used.
+   */
   public static void drawNamedPoints(GameProvider game) {
     drawNamedPoints(null, false, game);
   }
@@ -216,8 +227,10 @@ public class DebugDrawSystem extends System {
    *
    * @param highlightPoint The name of the point to highlight, or null for none.
    * @param pointModeActive Whether point mode is active, affecting the color used.
+   * @param game The game provider to be used.
    */
-  public static void drawNamedPoints(String highlightPoint, boolean pointModeActive, GameProvider game) {
+  public static void drawNamedPoints(
+      String highlightPoint, boolean pointModeActive, GameProvider game) {
     ILevel l = game.currentLevel().orElse(null);
     if (l == null) return;
     Color normalColor = pointModeActive ? POINT_MODE_COLOR : NAMED_POINT_COLOR;
@@ -329,12 +342,12 @@ public class DebugDrawSystem extends System {
    * Draw on entity hover relevant entity infos.
    *
    * <pre>
-   *   * Entity ID
-   *   * Position; View Direction
-   *   * Current Velocity (if VelocityComponent is present)
-   *   * curHealth/maxHealth (if HealthComponent is present)
-   *   * Current Animation state (if DrawComponent is present)
-   *   * List of all components attached to the entity
+   * * Entity ID
+   * * Position; View Direction
+   * * Current Velocity (if VelocityComponent is present)
+   * * curHealth/maxHealth (if HealthComponent is present)
+   * * Current Animation state (if DrawComponent is present)
+   * * List of all components attached to the entity
    * </pre>
    *
    * @param entity The entity to draw info for.

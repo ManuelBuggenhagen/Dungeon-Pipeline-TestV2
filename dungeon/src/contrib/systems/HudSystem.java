@@ -43,9 +43,16 @@ public final class HudSystem extends System {
 
   private final GameProvider game;
 
-  public HudSystem() {this(new DefaultGameProvider());}
+  /** Creates a new HudSystem with a DefaultGameProvider. */
+  public HudSystem() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Create a new HudSystem. */
+  /**
+   * Creates a new HudSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
   public HudSystem(GameProvider game) {
     super(AuthoritativeSide.BOTH, UIComponent.class);
     onEntityAdd = this::addListener;
@@ -56,7 +63,7 @@ public final class HudSystem extends System {
   /**
    * Returns the topmost closeable UI.
    *
-   * @return a Tuple of the Entity and its UIComponent
+   * @return a Tuple of the Entity and its UIComponent.
    */
   public Optional<Tuple<Entity, UIComponent>> topmostCloseableUI() {
     return entityUIComponentMap.entrySet().stream()
@@ -68,8 +75,8 @@ public final class HudSystem extends System {
   /**
    * Returns whether there is any open pausing UI for a given entity.
    *
-   * @param entity the entity to check for
-   * @return true if there is an open pausing UI for the entity, false otherwise
+   * @param entity the entity to check for.
+   * @return true if there is an open pausing UI for the entity, false otherwise.
    */
   public boolean hasOpenPausingUI(Entity entity) {
     return entityUIComponentMap.values().stream()
@@ -165,12 +172,9 @@ public final class HudSystem extends System {
   /**
    * Sends the dialog to all connected and relevant clients.
    *
-   * <p>A dialog is relevant for a client, if the targetEntityIds of the UIComponent contains the id
-   * of an entity controlled by the client or if targetEntityIds is empty (meaning all clients).
-   *
-   * @param entity the entity which owns the UIComponent
-   * @param component the UIComponent to send
-   * @param targetIds all clients that are connect and should receive the dialog
+   * @param entity the entity which owns the UIComponent.
+   * @param component the UIComponent to send.
+   * @param targetIds all clients that are connect and should receive the dialog.
    */
   private void sendDialogToClients(
       final Entity entity, final UIComponent component, int[] targetIds) {

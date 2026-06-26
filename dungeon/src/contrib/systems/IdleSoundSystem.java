@@ -29,9 +29,16 @@ public final class IdleSoundSystem extends System {
 
   private final GameProvider game;
 
-  public IdleSoundSystem() {this(new DefaultGameProvider());}
+  /** Creates a new IdleSoundSystem with the DefaultGameProvider. */
+  public IdleSoundSystem() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Create a new {@link IdleSoundSystem}. */
+  /**
+   * Creates a new IdleSoundSystem with the given GameProvider.
+   *
+   * @param gameProvider The game provider to be used.
+   */
   public IdleSoundSystem(GameProvider gameProvider) {
     super(IdleSoundComponent.class);
     this.game = gameProvider;

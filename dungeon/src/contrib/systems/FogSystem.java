@@ -50,13 +50,22 @@ public class FogSystem extends System {
   private final List<Entity> hiddenEntities = new ArrayList<>();
   private boolean active = true;
 
-  GameProvider game;
+  private final GameProvider game;
 
-  public FogSystem(GameProvider game){
+  /**
+   * Constructs a new FogSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
+  public FogSystem(GameProvider game) {
     this.game = game;
   }
 
-  public FogSystem(){
+  /**
+   * Creates a new FogSystem with a DefaultGameProvider. Keeps backward compatibility for existing
+   * initializations.
+   */
+  public FogSystem() {
     this(new DefaultGameProvider());
   }
 

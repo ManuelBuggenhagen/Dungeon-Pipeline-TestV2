@@ -40,9 +40,16 @@ public class DecoTestSystem extends System {
 
   private final GameProvider game;
 
-  public DecoTestSystem() {this(new DefaultGameProvider());}
+  /** Creates a new DecoTestSystem with a DefaultGameProvider. */
+  public DecoTestSystem() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Constructor for DecoTestSystem. */
+  /**
+   * Creates a new DecoTestSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
   public DecoTestSystem(GameProvider game) {
     font = FontHelper.getFont("fonts/Roboto-Bold.ttf", 16);
     this.game = game;

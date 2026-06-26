@@ -16,19 +16,20 @@ public class ManaRestoreSystem extends System {
 
   private final GameProvider game;
 
-   public ManaRestoreSystem() {this(new DefaultGameProvider());}
+  /** Creates a new {@code ManaRestoreSystem} with a DefaultGameProvider. */
+  public ManaRestoreSystem() {
+    this(new DefaultGameProvider());
+  }
 
   /**
-   * Creates a new {@code ManaRestoreSystem}.
+   * Creates a new {@code ManaRestoreSystem} with the given GameProvider.
    *
-   * <p>This system operates on entities that have a {@link ManaComponent}.
+   * @param game The game provider to be used.
    */
   public ManaRestoreSystem(GameProvider game) {
     super(ManaComponent.class);
     this.game = game;
   }
-
-
 
   /**
    * Executes the mana restoration for all entities that contain a {@link ManaComponent}.

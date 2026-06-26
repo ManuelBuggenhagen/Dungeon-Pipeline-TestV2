@@ -48,9 +48,16 @@ public final class CollisionSystem extends System {
 
   private final Map<CollisionKey, CollisionData> collisions = new HashMap<>();
 
-  public CollisionSystem(){this(new DefaultGameProvider());}
+  /** Creates a new CollisionSystem with a DefaultGameProvider. */
+  public CollisionSystem() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Create a new CollisionSystem. */
+  /**
+   * Creates a new CollisionSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
   public CollisionSystem(GameProvider game) {
     super(CollideComponent.class);
     this.game = game;

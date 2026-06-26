@@ -78,6 +78,7 @@ public class LevelEditorSystem extends System {
    * Creates a new LevelEditorSystem.
    *
    * @param pathToLevels The folder in which the file is placed this system.
+   * @param game The game provider to be used.
    */
   public LevelEditorSystem(String pathToLevels, GameProvider game) {
     super();
@@ -85,12 +86,19 @@ public class LevelEditorSystem extends System {
     this.game = game;
   }
 
-  /** Creates a new LevelEditorSystem. */
+  /**
+   * Constructs a new LevelEditorSystem with the given GameProvider.
+   *
+   * @param pathToLevels The folder in which the file is placed this system.
+   */
   public LevelEditorSystem(String pathToLevels) {
     this(pathToLevels, new DefaultGameProvider());
   }
 
-  public LevelEditorSystem() {this("", new DefaultGameProvider());}
+  /** Creates a new LevelEditorSystem. */
+  public LevelEditorSystem() {
+    this("", new DefaultGameProvider());
+  }
 
   /**
    * Gets the active status of the LevelEditorSystem.

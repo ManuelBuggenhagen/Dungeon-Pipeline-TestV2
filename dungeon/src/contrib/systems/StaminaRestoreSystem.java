@@ -13,15 +13,19 @@ import core.System;
  * value is divided by the current game frame rate.
  */
 public class StaminaRestoreSystem extends System {
-
   private final GameProvider game;
 
-  public StaminaRestoreSystem() {this(new DefaultGameProvider());}
+  /** Creates a new {@code StaminaRestoreSystem} with a DefaultGameProvider. */
+  public StaminaRestoreSystem() {
+    this(new DefaultGameProvider());
+  }
 
   /**
-   * Creates a new {@code EnergyRestoreSystem}.
+   * Creates a new {@code StaminaRestoreSystem} with the given GameProvider.
    *
    * <p>This system processes all entities that contain an {@link StaminaComponent}.
+   *
+   * @param game The game provider to be used.
    */
   public StaminaRestoreSystem(GameProvider game) {
     super(StaminaComponent.class);

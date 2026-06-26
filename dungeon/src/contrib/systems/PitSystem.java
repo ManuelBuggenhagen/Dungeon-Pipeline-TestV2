@@ -29,11 +29,16 @@ public class PitSystem extends System {
   private final Map<PitTile, Long> pitTimes = new HashMap<>();
   private final GameProvider game;
 
-  public PitSystem(){this(new DefaultGameProvider());}
+  /** Creates a new PitSystem with a DefaultGameProvider. */
+  public PitSystem() {
+    this(new DefaultGameProvider());
+  }
 
   /**
-   * Constructor for the PitSystem class. This system processes entities with the PositionComponent
-   * and VelocityComponent.
+   * Constructor for the PitSystem class. This system processes entities with the PositionComponent,
+   * VelocityComponent and CollideComponent.
+   *
+   * @param game The game provider to be used.
    */
   public PitSystem(GameProvider game) {
     super(PositionComponent.class, VelocityComponent.class, CollideComponent.class);

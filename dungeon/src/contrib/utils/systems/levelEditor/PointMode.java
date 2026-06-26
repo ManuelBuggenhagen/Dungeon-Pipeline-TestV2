@@ -24,9 +24,15 @@ public class PointMode extends LevelEditorMode {
   private static SnapMode snapMode = SnapMode.OnGrid;
   private static String heldPointName = null;
 
-  public PointMode() {this(new DefaultGameProvider());}
+  public PointMode() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Constructs a new PointMode. */
+  /**
+   * Constructs a new PointMode.
+   *
+   * @param game The game provider to be used.
+   */
   public PointMode(GameProvider game) {
     super("Point Mode");
     this.game = game;

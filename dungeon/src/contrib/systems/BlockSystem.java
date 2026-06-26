@@ -50,16 +50,22 @@ public final class BlockSystem extends System {
             .removeFromPathfinding(game.tileAt(data.pc.position()).orElse(null));
       };
 
-  public BlockSystem() {this(new DefaultGameProvider());}
+  /** Creates a new BlockSystem with a DefaultGameProvider. */
+  public BlockSystem() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Creates a new BlockSystem. */
+  /**
+   * Creates a new BlockSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
   public BlockSystem(GameProvider game) {
     super(BlockComponent.class, PositionComponent.class);
     this.game = game;
     this.onEntityAdd = onAdd;
     this.onEntityRemove = onRemove;
     oldPositions = new HashMap<>();
-
   }
 
   /**

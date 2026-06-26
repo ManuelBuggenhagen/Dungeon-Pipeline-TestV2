@@ -15,12 +15,18 @@ import core.level.elements.ILevel;
  * @see core.level.DungeonLevel DungeonLevel
  */
 public class LevelTickSystem extends System {
-
   private final GameProvider game;
 
-  public LevelTickSystem() {this(new DefaultGameProvider());}
+  /** Creates a new LevelTickSystem with a DefaultGameProvider. */
+  public LevelTickSystem() {
+    this(new DefaultGameProvider());
+  }
 
-  /** Creates a new LevelTickSystem. */
+  /**
+   * Creates a new LevelTickSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
   public LevelTickSystem(GameProvider game) {
     super(AuthoritativeSide.BOTH);
     this.game = game;

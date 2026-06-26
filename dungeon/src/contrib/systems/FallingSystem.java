@@ -48,6 +48,11 @@ public class FallingSystem extends System {
     this(new DefaultGameProvider());
   }
 
+  /**
+   * Constructs a new FallingSystem with the given GameProvider.
+   *
+   * @param game The game provider to be used.
+   */
   public FallingSystem(GameProvider game) {
     this.game = game;
     super(PositionComponent.class, HealthComponent.class, VelocityComponent.class);
@@ -61,9 +66,9 @@ public class FallingSystem extends System {
   private boolean filterFalling(Entity entity) {
     if (entity.isPresent(FlyComponent.class)) return false;
     CollideComponent cc =
-      entity
-        .fetch(CollideComponent.class)
-        .orElseThrow(() -> MissingComponentException.build(entity, CollideComponent.class));
+        entity
+            .fetch(CollideComponent.class)
+            .orElseThrow(() -> MissingComponentException.build(entity, CollideComponent.class));
     Point center = cc.collider().absoluteCenter();
     Tile tile = game.tileAt(center).orElse(null);
     if (tile instanceof PitTile pitTile) {
@@ -75,22 +80,22 @@ public class FallingSystem extends System {
   private void handleFalling(Entity entity) {
     LOGGER.info("Entity {} has fallen to its death", entity);
     entity
-      .fetch(HealthComponent.class)
-      .ifPresent(
-        hc -> {
-          if (DEBUG_DONT_KILL && entity.isPresent(PlayerComponent.class)) {
-            teleportPlayerIfPossible();
-            return;
-          }
-          hc.receiveHit(new Damage(hc.currentHealthpoints(), DamageType.FALL, entity));
-        });
+        .fetch(HealthComponent.class)
+        .ifPresent(
+            hc -> {
+              if (DEBUG_DONT_KILL && entity.isPresent(PlayerComponent.class)) {
+                teleportPlayerIfPossible();
+                return;
+              }
+              hc.receiveHit(new Damage(hc.currentHealthpoints(), DamageType.FALL, entity));
+            });
   }
 
   private void teleportPlayerIfPossible() {
     Point playerCoords = EntityUtils.getPlayerPosition();
     if (playerCoords != null) {
       getSafeTile(playerCoords)
-        .ifPresentOrElse(Debugger::TELEPORT, () -> LOGGER.warn("No safe place to teleport."));
+          .ifPresentOrElse(Debugger::TELEPORT, () -> LOGGER.warn("No safe place to teleport."));
     }
   }
 

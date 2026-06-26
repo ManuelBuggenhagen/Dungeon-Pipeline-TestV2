@@ -17,14 +17,18 @@ import core.components.PositionComponent;
  * interacted with.
  */
 public class ShowImageSystem extends System {
-
   private final GameProvider game;
 
-  public ShowImageSystem() {this(new DefaultGameProvider());}
+  /** Creates a new ShowImageSystem with a DefaultGameProvider. */
+  public ShowImageSystem() {
+    this(new DefaultGameProvider());
+  }
 
   /**
    * Creates a new ShowImageSystem that processes entities with ShowImageComponent, DrawComponent,
    * and PositionComponent.
+   *
+   * @param game The game provider to be used.
    */
   public ShowImageSystem(GameProvider game) {
     super(ShowImageComponent.class, DrawComponent.class, PositionComponent.class);
