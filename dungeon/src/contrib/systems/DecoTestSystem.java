@@ -35,12 +35,10 @@ public class DecoTestSystem extends System {
   private Entity testEntity;
   private Deco currentDeco;
   private Mode currentMode = Mode.ChangeDeco;
-  private final BitmapFont font;
+  private BitmapFont font;
 
   /** Constructor for DecoTestSystem. */
-  public DecoTestSystem() {
-    font = FontHelper.getFont("fonts/Roboto-Bold.ttf", 16);
-  }
+  public DecoTestSystem() {}
 
   /** Executes the system. */
   @Override
@@ -77,6 +75,13 @@ public class DecoTestSystem extends System {
     }
   }
 
+  private BitmapFont font() {
+    if (font == null) {
+      font = FontHelper.getFont("fonts/Roboto-Bold.ttf", 16);
+    }
+    return font;
+  }
+
   private void drawStatus() {
     String modeText = "Mode: " + currentMode.name();
     modeText += "\nControls: Change Mode (UP), Modify (+RIGHT/-LEFT), Move Deco (DOWN)";
@@ -100,7 +105,7 @@ public class DecoTestSystem extends System {
 
     float offset = 10;
     DebugDrawSystem.drawText(
-        font, modeText, new Point(offset, Gdx.graphics.getHeight() - offset - 200));
+        font(), modeText, new Point(offset, Gdx.graphics.getHeight() - offset - 200));
   }
 
   /**
