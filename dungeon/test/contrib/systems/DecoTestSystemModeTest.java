@@ -1,11 +1,10 @@
-package contrib.systems.DecoTestSystem_Folder;
+package contrib.systems;
 
 import static org.junit.jupiter.api.Assertions.*;
-import contrib.systems.DecoTestSystem;
 
 import org.junit.jupiter.api.Test;
 
-class ModeTest {
+class DecoTestSystemModeTest {
 
     @Test
     void nextShouldReturnNextMode() {

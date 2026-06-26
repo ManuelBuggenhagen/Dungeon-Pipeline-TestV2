@@ -199,7 +199,7 @@ public class DecoTestSystem extends System {
     return SkillTools.cursorPositionAsPoint();
   }
 
- public enum Mode {
+  enum Mode {
     ChangeDeco,
     ModifyOffsetX,
     ModifyOffsetY,
@@ -211,7 +211,7 @@ public class DecoTestSystem extends System {
      *
      * @return The next mode
      */
-    public Mode next() {
+    Mode next() {
       return values()[(this.ordinal() + 1) % values().length];
     }
   }
