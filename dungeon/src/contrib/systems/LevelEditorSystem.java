@@ -90,6 +90,8 @@ public class LevelEditorSystem extends System {
     this(pathToLevels, new DefaultGameProvider());
   }
 
+  public LevelEditorSystem() {this("", new DefaultGameProvider());}
+
   /**
    * Gets the active status of the LevelEditorSystem.
    *
