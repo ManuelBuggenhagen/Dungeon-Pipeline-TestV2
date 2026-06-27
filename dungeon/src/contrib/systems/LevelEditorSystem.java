@@ -113,6 +113,7 @@ public class LevelEditorSystem extends System {
    * Sets the active status of the LevelEditorSystem.
    *
    * @param active The active status to set.
+   * @param game The game provider to be used.
    */
   public static void active(boolean active, GameProvider game) {
     LevelEditorSystem.active = active;

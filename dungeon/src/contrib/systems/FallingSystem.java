@@ -54,8 +54,8 @@ public class FallingSystem extends System {
    * @param game The game provider to be used.
    */
   public FallingSystem(GameProvider game) {
-    this.game = game;
     super(PositionComponent.class, HealthComponent.class, VelocityComponent.class);
+    this.game = game;
   }
 
   @Override

@@ -55,9 +55,9 @@ public final class HudSystem extends System {
    */
   public HudSystem(GameProvider game) {
     super(AuthoritativeSide.BOTH, UIComponent.class);
+    this.game = game;
     onEntityAdd = this::addListener;
     onEntityRemove = this::removeListener;
-    this.game = game;
   }
 
   /**
