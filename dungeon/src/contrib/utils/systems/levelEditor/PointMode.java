@@ -61,19 +61,19 @@ public class PointMode extends LevelEditorMode {
       } else {
         // Place new point instance
         DialogFactory.showInputDialog(
-          "",
-          "Add Named Point",
-          "",
-          "Name of point",
-          "Add",
-          "Cancel",
-          payload -> {
-            if (payload instanceof DialogResponseMessage.StringValue(String value)
-              && !value.isBlank()) {
-              getLevel().addNamedPoint(value, snapPos);
-            }
-          },
-          () -> {});
+            "",
+            "Add Named Point",
+            "",
+            "Name of point",
+            "Add",
+            "Cancel",
+            payload -> {
+              if (payload instanceof DialogResponseMessage.StringValue(String value)
+                  && !value.isBlank()) {
+                getLevel().addNamedPoint(value, snapPos);
+              }
+            },
+            () -> {});
       }
     } else if (InputManager.isButtonJustPressed(Input.Buttons.RIGHT)) {
       Optional<String> clickedPoint = getOnPosition(cursorPos);
@@ -101,12 +101,12 @@ public class PointMode extends LevelEditorMode {
   @Override
   public String getStatusText() {
     String status =
-      "Snap Mode: "
-        + snapMode.name()
-        + "\nHeld Point: "
-        + Objects.requireNonNullElse(heldPointName, "<none>")
-        + "\nTotal Points: "
-        + getLevel().namedPoints().size();
+        "Snap Mode: "
+            + snapMode.name()
+            + "\nHeld Point: "
+            + Objects.requireNonNullElse(heldPointName, "<none>")
+            + "\nTotal Points: "
+            + getLevel().namedPoints().size();
 
     return status;
   }
@@ -124,8 +124,8 @@ public class PointMode extends LevelEditorMode {
   private Optional<String> getOnPosition(Point position) {
     Coordinate toCheck = position.toCoordinate();
     return getLevel().namedPoints().entrySet().stream()
-      .filter(entry -> entry.getValue().toCoordinate().equals(toCheck))
-      .map(Map.Entry::getKey)
-      .findFirst();
+        .filter(entry -> entry.getValue().toCoordinate().equals(toCheck))
+        .map(Map.Entry::getKey)
+        .findFirst();
   }
 }
