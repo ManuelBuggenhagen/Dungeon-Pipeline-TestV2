@@ -1,20 +1,24 @@
 package contrib.item;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
+/**
+ * Test class
+ */
 
 public class HealthPotionTypeTest {
 
 
   @Test
-  void getHealAmount_shouldReturnCorrectValues(){
-    assertEquals(7,HealthPotionType.WEAK.getHealAmount());
-    assertEquals(15,HealthPotionType.NORMAL.getHealAmount());
-    assertEquals(30,HealthPotionType.GREATER.getHealAmount());
+  void getHealAmount_shouldReturnCorrectValues() {
+    assertEquals(7, HealthPotionType.WEAK.getHealAmount());
+    assertEquals(15, HealthPotionType.NORMAL.getHealAmount());
+    assertEquals(30, HealthPotionType.GREATER.getHealAmount());
   }
 
   @Test
