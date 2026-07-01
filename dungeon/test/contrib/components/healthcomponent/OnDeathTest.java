@@ -1,8 +1,7 @@
 package contrib.components.healthcomponent;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import contrib.components.HealthComponent;
 import core.Entity;
@@ -33,7 +32,7 @@ public class OnDeathTest {
     healthComponent.onDeath(callback);
     healthComponent.triggerOnDeath(entity);
 
-    verify(callback, times(1));
+    verify(callback, times(1)).accept(entity);
   }
 
   @Test
@@ -44,13 +43,13 @@ public class OnDeathTest {
 
     healthComponent.triggerOnDeath(entity);
 
-    verify(callback, times(0));
+    verify(callback, times(0)).accept(entity);
+    verify(overwriteCallback, times(1)).accept(entity);
   }
 
   @Test
   void onDeath_passingNull_callbackSetToNull() {
     healthComponent.onDeath(null);
-
     assertThrows(NullPointerException.class, () -> healthComponent.triggerOnDeath(entity));
   }
 }
