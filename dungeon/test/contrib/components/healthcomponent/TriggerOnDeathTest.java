@@ -1,21 +1,18 @@
 package contrib.components.healthcomponent;
 
-import contrib.components.HealthComponent;
-import core.Entity;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
-
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
-/**
- * Tests for {@link HealthComponent#triggerOnDeath}.
- */
+import contrib.components.HealthComponent;
+import core.Entity;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/** Tests for {@link HealthComponent#triggerOnDeath}. */
 public class TriggerOnDeathTest {
 
   private Entity entity;
@@ -53,6 +50,6 @@ public class TriggerOnDeathTest {
   void triggerOnDeath_onDeathCallbackIsNull_throwsNullPointerException() {
     healthComponent = new HealthComponent(1, null);
 
-    assertThrows(NullPointerException.class, ()-> healthComponent.triggerOnDeath(entity));
+    assertThrows(NullPointerException.class, () -> healthComponent.triggerOnDeath(entity));
   }
 }
