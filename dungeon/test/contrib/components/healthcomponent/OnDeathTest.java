@@ -1,7 +1,8 @@
 package contrib.components.healthcomponent;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import contrib.components.HealthComponent;
 import core.Entity;
