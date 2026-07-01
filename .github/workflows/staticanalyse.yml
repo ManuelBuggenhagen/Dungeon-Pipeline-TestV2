@@ -1,0 +1,40 @@
+name: Static Analysis
+on:
+  pull_request:
+  push:
+  workflow_call:
+
+jobs:
+  check_spotless:
+    uses: ./.github/workflows/reusable_spotless_check.yml
+    permissions:
+      contents: read
+  check_pmd:
+    uses: ./.github/workflows/reusable_pmd.yml
+    permissions:
+      contents: read
+  call-designite:
+    uses: ./.github/workflows/reusable_designite_java.yml
+    permissions:
+      contents: read
+    secrets: inherit
+    # Grenzwerte extern ueber Repository Variables setzen
+    # (Settings -> Secrets and variables -> Actions -> Variables).
+    # Ist eine Variable nicht gesetzt, greift der Fallback (-1 = wird nicht geprueft).
+    with:
+      max_smells:         ${{ vars.MAX_SMELLS         || -1 }}
+      max_architecture:   ${{ vars.MAX_ARCHITECTURE   || -1 }}
+      max_design:         ${{ vars.MAX_DESIGN         || -1 }}
+      max_implementation: ${{ vars.MAX_IMPLEMENTATION || -1 }}
+      max_testability:    ${{ vars.MAX_TESTABILITY    || -1 }}
+      max_test:           ${{ vars.MAX_TEST           || -1 }}
+  check_spell:
+    uses: ./.github/workflows/reusable_typos.yml
+    permissions:
+      contents: read
+  check_codeql:
+    uses: ./.github/workflows/reusable_codeql.yml
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
