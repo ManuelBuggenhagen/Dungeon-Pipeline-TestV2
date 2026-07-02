@@ -1,0 +1,53 @@
+name: Test with Code coverage
+on:
+  pull_request:
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Make Grade executable
+        run: chmod +x ./gradlew
+
+      - name: Run tests and generate JaCoCo report
+        run: ./gradlew clean test jacocoTestReport --continue
+      
+      - name: Format coverage summary
+        if: always()
+        run: |
+          python3 .github/scripts/code_coverage_formatter.py \
+            --min-line-coverage 25 \
+            --warning-line-coverage 60 \
+            --good-line-coverage 80
+      
+      - name: Upload JaCoCo reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-reports
+          path: |
+            **/build/JacocoReports/test/html
+            **/build/JacocoReports/test/jacocoTestReport.xml
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Add coverage to PR
+        if: github.event_name == 'pull_request'
+        uses: madrapps/jacoco-report@v1.8.0
+        with:
+          paths: ${{ github.workspace }}/**/build/JacocoReports/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 25
+          min-coverage-changed-files: 40
