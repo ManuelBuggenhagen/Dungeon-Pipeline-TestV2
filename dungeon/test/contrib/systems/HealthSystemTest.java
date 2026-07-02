@@ -1,6 +1,5 @@
 package contrib.systems;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -13,14 +12,11 @@ import core.FakeGame;
 import core.components.DrawComponent;
 import org.junit.jupiter.api.Test;
 
-
-/**  test class */
+/** test class */
 public class HealthSystemTest {
   private final FakeGame game = new FakeGame();
   private final MockHealthSystem system = new MockHealthSystem(game);
   private final Entity entity = new Entity("test");
-
-
 
   @Test
   void calculateDamage_singleDamage_returnsDamage() {
@@ -30,12 +26,10 @@ public class HealthSystemTest {
 
     DrawComponent dc = mock(DrawComponent.class);
 
-    HealthSystem.HSData data =
-            new HealthSystem.HSData(entity, hc, dc);
+    HealthSystem.HSData data = new HealthSystem.HSData(entity, hc, dc);
 
     assertEquals(10, system.calculateDamagePublic(data));
   }
-
 
   @Test
   void calculateDamage_multipleDamage_returnsSum() {
@@ -46,12 +40,10 @@ public class HealthSystemTest {
 
     DrawComponent dc = mock(DrawComponent.class);
 
-    HealthSystem.HSData data =
-            new HealthSystem.HSData(entity, hc, dc);
+    HealthSystem.HSData data = new HealthSystem.HSData(entity, hc, dc);
 
     assertEquals(25, system.calculateDamagePublic(data));
   }
-
 
   @Test
   void calculateDamage_noDamage_returnsZero() {
@@ -60,8 +52,7 @@ public class HealthSystemTest {
 
     DrawComponent dc = mock(DrawComponent.class);
 
-    HealthSystem.HSData data =
-            new HealthSystem.HSData(entity, hc, dc);
+    HealthSystem.HSData data = new HealthSystem.HSData(entity, hc, dc);
 
     assertEquals(0, system.calculateDamagePublic(data));
   }
@@ -76,8 +67,7 @@ public class HealthSystemTest {
 
     DrawComponent dc = mock(DrawComponent.class);
 
-    HealthSystem.HSData data =
-            new HealthSystem.HSData(entity, hc, dc);
+    HealthSystem.HSData data = new HealthSystem.HSData(entity, hc, dc);
 
     assertEquals(15, system.calculateDamagePublic(data));
   }
@@ -85,13 +75,6 @@ public class HealthSystemTest {
   @Test
   void calculateDamage_nullHSData_throwsException() {
 
-    assertThrows(
-            NullPointerException.class,
-            () -> system.calculateDamagePublic(null)
-    );
+    assertThrows(NullPointerException.class, () -> system.calculateDamagePublic(null));
   }
-
-
-
-
 }

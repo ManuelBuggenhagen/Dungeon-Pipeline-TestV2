@@ -9,39 +9,27 @@ public class FakeGame {
 
   private final Set<Entity> entities = new HashSet<>();
 
-
-
   public Entity add(Entity entity) {
     entities.add(entity);
     return entity;
   }
-
 
   public Entity remove(Entity entity) {
     entities.remove(entity);
     return entity;
   }
 
-
-
   public Stream<Entity> allEntities() {
     return entities.stream();
   }
 
-
-  public final Stream<Entity> filteredEntityStream(
-    Class<? extends Component>... components) {
+  public final Stream<Entity> filteredEntityStream(Class<? extends Component>... components) {
 
     return entities.stream()
-      .filter(entity ->
-        java.util.Arrays.stream(components)
-          .allMatch(entity::isPresent)
-      );
+        .filter(entity -> java.util.Arrays.stream(components).allMatch(entity::isPresent));
   }
-
 
   public void clear() {
     entities.clear();
   }
 }
-
