@@ -8,13 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import core.utils.components.draw.animation.Animation;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-/** Test class */
+/** Tests */
 public class ItemRegistryTest {
 
-  @BeforeEach
+  @AfterEach
   void setup() {
     ItemRegistry.clearMapsForTests();
   }
@@ -23,12 +24,16 @@ public class ItemRegistryTest {
   void lookup_withExistingId_shouldReturnClass() {
     ItemRegistry.register("TestID", Item.class);
 
-    assertEquals(Item.class, ItemRegistry.lookup("TestID").orElseThrow());
+    Class<?> result = ItemRegistry.lookup("TestID").orElseThrow();
+
+    assertEquals(Item.class, result);
   }
 
   @Test
   void lookup_withMissingId_shouldReturnEmpty() {
-    assertTrue(ItemRegistry.lookup("missing").isEmpty());
+    var result = ItemRegistry.lookup("missing");
+
+    assertTrue(result.isEmpty());
   }
 
   @Test
@@ -43,27 +48,25 @@ public class ItemRegistryTest {
 
   @Test
   void register_withValidId_shouldRegisterClass() {
+    String id = "TestID";
 
-    ItemRegistry.register("TestID", Item.class);
+    ItemRegistry.register(id, Item.class);
 
-    assertTrue(ItemRegistry.lookup("TestID").isPresent());
+    assertTrue(ItemRegistry.lookup(id).isPresent());
   }
 
   @Test
   void register_withNullClass_shouldThrowException() {
-
     assertThrows(NullPointerException.class, () -> ItemRegistry.register("TestID", null));
   }
 
   @Test
   void register_withNullId_shouldThrowException() {
-
     assertThrows(IllegalArgumentException.class, () -> ItemRegistry.register(null, Item.class));
   }
 
   @Test
   void register_withClassOnly_shouldUseSimpleName() {
-
     ItemRegistry.register(Item.class);
 
     assertTrue(ItemRegistry.lookup("Item").isPresent());
@@ -71,7 +74,6 @@ public class ItemRegistryTest {
 
   @Test
   void register_sameClassTwice_shouldNotThrow() {
-
     ItemRegistry.register("ID", Item.class);
 
     assertDoesNotThrow(() -> ItemRegistry.register("ID", Item.class));
@@ -79,49 +81,52 @@ public class ItemRegistryTest {
 
   @Test
   void register_withFactory_shouldCreateItem() {
-
     ItemRegistry.register(
-        "ID", Item.class, data -> new Item("Test", "Description", (Animation) null));
+      "ID", Item.class, data -> new Item("Test", "Description", (Animation) null));
 
-    assertTrue(ItemRegistry.create("ID", Map.of()).isPresent());
+    var result = ItemRegistry.create("ID", Map.of());
+
+    assertTrue(result.isPresent());
   }
 
   @Test
   void registerFactory_shouldRegisterFactory() {
-
     ItemRegistry.register("ID", Item.class);
 
-    ItemRegistry.registerFactory("ID", data -> new Item("Test", "Description", (Animation) null));
+    ItemRegistry.registerFactory(
+      "ID", data -> new Item("Test", "Description", (Animation) null));
 
-    assertTrue(ItemRegistry.create("ID", Map.of()).isPresent());
+    var result = ItemRegistry.create("ID", Map.of());
+
+    assertTrue(result.isPresent());
   }
 
   @Test
   void registerFactory_withNullFactory_shouldThrow() {
-
     assertThrows(NullPointerException.class, () -> ItemRegistry.registerFactory("ID", null));
   }
 
   @Test
   void create_withoutFactory_shouldReturnEmpty() {
-
     ItemRegistry.register("ID", Item.class);
 
-    assertTrue(ItemRegistry.create("ID", Map.of()).isEmpty());
+    var result = ItemRegistry.create("ID", Map.of());
+
+    assertTrue(result.isEmpty());
   }
 
   @Test
   void create_withNullData_shouldWork() {
-
     ItemRegistry.register(
-        "ID", Item.class, data -> new Item("Test", "Description", (Animation) null));
+      "ID", Item.class, data -> new Item("Test", "Description", (Animation) null));
 
-    assertTrue(ItemRegistry.create("ID", null).isPresent());
+    var result = ItemRegistry.create("ID", null);
+
+    assertTrue(result.isPresent());
   }
 
   @Test
   void create_factoryReturningNull_shouldThrow() {
-
     ItemRegistry.register("ID", Item.class, data -> null);
 
     assertThrows(IllegalStateException.class, () -> ItemRegistry.create("ID", Map.of()));
@@ -129,39 +134,41 @@ public class ItemRegistryTest {
 
   @Test
   void entries_shouldContainRegisteredItem() {
-
     ItemRegistry.register("ID", Item.class);
 
-    assertEquals(Item.class, ItemRegistry.entries().get("ID"));
+    var entries = ItemRegistry.entries();
+
+    assertEquals(Item.class, entries.get("ID"));
   }
 
   @Test
   void idForClass_shouldReturnId() {
-
     ItemRegistry.register("ID", Item.class);
 
-    assertEquals("ID", ItemRegistry.idFor(Item.class).orElseThrow());
+    var result = ItemRegistry.idFor(Item.class).orElseThrow();
+
+    assertEquals("ID", result);
   }
 
   @Test
   void idForUnknownClass_shouldReturnEmpty() {
+    var result = ItemRegistry.idFor(Item.class);
 
-    assertTrue(ItemRegistry.idFor(Item.class).isEmpty());
+    assertTrue(result.isEmpty());
   }
 
   @Test
   void idForItem_shouldReturnId() {
-
     ItemRegistry.register("ID", Item.class);
-
     Item item = new Item("Test", "Description", (Animation) null);
 
-    assertEquals("ID", ItemRegistry.idFor(item));
+    String result = ItemRegistry.idFor(item);
+
+    assertEquals("ID", result);
   }
 
   @Test
   void idForUnregisteredItem_shouldThrow() {
-
     Item item = new Item("Test", "Description", (Animation) null);
 
     assertThrows(IllegalArgumentException.class, () -> ItemRegistry.idFor(item));
@@ -169,15 +176,17 @@ public class ItemRegistryTest {
 
   @Test
   void isRegistered_existingClass_shouldReturnTrue() {
-
     ItemRegistry.register("ID", Item.class);
 
-    assertTrue(ItemRegistry.isRegistered(Item.class));
+    boolean result = ItemRegistry.isRegistered(Item.class);
+
+    assertTrue(result);
   }
 
   @Test
   void isRegistered_missingClass_shouldReturnFalse() {
+    boolean result = ItemRegistry.isRegistered(Item.class);
 
-    assertFalse(ItemRegistry.isRegistered(Item.class));
+    assertFalse(result);
   }
 }
