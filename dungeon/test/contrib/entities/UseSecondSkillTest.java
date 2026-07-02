@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import contrib.components.SkillComponent;
@@ -25,8 +26,9 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-/** Tests for {@link HeroController#useMainSkill(Entity, Point)} . */
-public class UseMainSkillTest {
+/** Tests for {@link HeroController#useSecondSkill(Entity, Point)} */
+public class UseSecondSkillTest {
+
   @Mock private Entity mockHero;
 
   @Mock private SkillComponent mockSkillComponent;
@@ -40,7 +42,6 @@ public class UseMainSkillTest {
   @Captor private ArgumentCaptor<Supplier<Point>> supplierCaptor;
 
   private Point validTarget;
-
   private AutoCloseable mocks;
 
   @BeforeEach
@@ -55,101 +56,86 @@ public class UseMainSkillTest {
   }
 
   @Test
-  void useMainSkill_WithCursorSkillAndValidTarget_SetsCursorPositionAndExecutes() {
-    // Arrange
+  void useSecondSkill_WithCursorSkillAndValidTarget_SetsCursorPositionAndExecutes() {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
-    when(mockSkillComponent.activeMainSkill()).thenReturn(Optional.of(mockCursorSkill));
+    when(mockSkillComponent.activeSecondSkill()).thenReturn(Optional.of(mockCursorSkill));
 
-    // Act
-    HeroController.useMainSkill(mockHero, validTarget);
+    HeroController.useSecondSkill(mockHero, validTarget);
 
-    // Assert
     verify(mockCursorSkill).cursorPositionSupplier(supplierCaptor.capture());
     assertEquals(
         validTarget,
         supplierCaptor.getValue().get(),
         "Cursor skill should set the target position to the provided valid target point");
+    verify(mockCursorSkill, times(1)).execute(mockHero);
   }
 
   @Test
-  void useMainSkill_WithProjectileSkillAndValidTarget_SetsEndpointAndExecutes() {
-    // Arrange
+  void useSecondSkill_WithProjectileSkillAndValidTarget_SetsEndpointAndExecutes() {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
-    when(mockSkillComponent.activeMainSkill()).thenReturn(Optional.of(mockProjectileSkill));
+    when(mockSkillComponent.activeSecondSkill()).thenReturn(Optional.of(mockProjectileSkill));
 
-    // Act
-    HeroController.useMainSkill(mockHero, validTarget);
+    HeroController.useSecondSkill(mockHero, validTarget);
 
-    // Assert
     verify(mockProjectileSkill).endPointSupplier(supplierCaptor.capture());
     assertEquals(
         validTarget,
         supplierCaptor.getValue().get(),
         "Projectile skill should set the endpoint to the provided valid target point");
+    verify(mockProjectileSkill, times(1)).execute(mockHero);
   }
 
   @Test
-  void useMainSkill_WithGenericSkillType_ExecutesWithoutTargetSetting() {
-    // Arrange
+  void useSecondSkill_WithGenericSkillType_ExecutesWithoutTargetSetting() {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
-    when(mockSkillComponent.activeMainSkill()).thenReturn(Optional.of(mockGenericSkill));
+    when(mockSkillComponent.activeSecondSkill()).thenReturn(Optional.of(mockGenericSkill));
 
-    // Act
-    HeroController.useMainSkill(mockHero, validTarget);
+    HeroController.useSecondSkill(mockHero, validTarget);
 
-    // Assert
     verify(mockGenericSkill, times(1)).execute(mockHero);
+    verifyNoInteractions(mockCursorSkill, mockProjectileSkill);
   }
 
   @Test
-  void useMainSkill_WithNoActiveSkill_ExecutesNothing() {
-    // Arrange
+  void useSecondSkill_WithNoActiveSkill_ExecutesNothing() {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
-    when(mockSkillComponent.activeMainSkill()).thenReturn(Optional.empty());
+    when(mockSkillComponent.activeSecondSkill()).thenReturn(Optional.empty());
 
-    // Act
-    HeroController.useMainSkill(mockHero, validTarget);
+    HeroController.useSecondSkill(mockHero, validTarget);
 
-    // Assert
     verify(mockGenericSkill, never()).execute(any());
+    verify(mockCursorSkill, never()).execute(any());
+    verify(mockProjectileSkill, never()).execute(any());
   }
 
   @Test
-  void useMainSkill_WithoutSkillComponent_ExecutesNothing() {
-    // Arrange
+  void useSecondSkill_WithoutSkillComponent_ExecutesNothing() {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.empty());
 
-    // Act
-    HeroController.useMainSkill(mockHero, validTarget);
+    HeroController.useSecondSkill(mockHero, validTarget);
 
-    // Assert
     verify(mockGenericSkill, never()).execute(any());
+    verify(mockCursorSkill, never()).execute(any());
+    verify(mockProjectileSkill, never()).execute(any());
   }
 
   @Test
-  void useMainSkill_WithNullHero_ThrowsNullPointerException() {
-    // Arrange
+  void useSecondSkill_WithNullHero_ThrowsNullPointerException() {
     Entity nullHero = null;
 
-    // Act & Assert
     assertThrows(
         NullPointerException.class,
-        () -> {
-          HeroController.useMainSkill(nullHero, validTarget);
-        },
+        () -> HeroController.useSecondSkill(nullHero, validTarget),
         "NullPointerException should be thrown when hero parameter is null");
   }
 
   @Test
-  void useMainSkill_WithCursorSkillAndNullTarget_SetsNullSupplier() {
-    // Arrange
+  void useSecondSkill_WithCursorSkillAndNullTarget_SetsNullSupplierAndExecutes() {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
-    when(mockSkillComponent.activeMainSkill()).thenReturn(Optional.of(mockCursorSkill));
+    when(mockSkillComponent.activeSecondSkill()).thenReturn(Optional.of(mockCursorSkill));
 
-    // Act
-    HeroController.useMainSkill(mockHero, null);
+    HeroController.useSecondSkill(mockHero, null);
 
-    // Assert
     verify(mockCursorSkill).cursorPositionSupplier(supplierCaptor.capture());
     assertNull(
         supplierCaptor.getValue().get(),
@@ -158,15 +144,12 @@ public class UseMainSkillTest {
   }
 
   @Test
-  void useMainSkill_WithProjectileSkillAndNullTarget_SetsNullSupplier() {
-    // Arrange
+  void useSecondSkill_WithProjectileSkillAndNullTarget_SetsNullSupplierAndExecutes() {
     when(mockHero.fetch(SkillComponent.class)).thenReturn(Optional.of(mockSkillComponent));
-    when(mockSkillComponent.activeMainSkill()).thenReturn(Optional.of(mockProjectileSkill));
+    when(mockSkillComponent.activeSecondSkill()).thenReturn(Optional.of(mockProjectileSkill));
 
-    // Act
-    HeroController.useMainSkill(mockHero, null);
+    HeroController.useSecondSkill(mockHero, null);
 
-    // Assert
     verify(mockProjectileSkill).endPointSupplier(supplierCaptor.capture());
     assertNull(
         supplierCaptor.getValue().get(),
