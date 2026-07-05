@@ -182,9 +182,12 @@ public final class AIFactory {
    * <p>Use this method to get an entity as parameter for specific AI-Behaviors like {@link
    * ProtectOnAttack}
    *
-   * @return a random monster from the game or null no monster exists in the game.
+   * <p>Package-private so it can be unit-tested directly (see {@code AIFactoryTest}).
+   *
+   * @return a random monster from the game, or an empty {@link Optional} if no monster exists in
+   *     the game.
    */
-  private static Optional<Entity> randomMonster() {
+  static Optional<Entity> randomMonster() {
     Stream<Entity> monsterStream =
         Game.levelEntities()
             .filter(m -> m.isPresent(HealthComponent.class))
@@ -208,10 +211,12 @@ public final class AIFactory {
    * <p>Use this method to get an entity as parameter for specific AI-Behaviors like {@link
    * ProtectOnAttack}
    *
+   * <p>Package-private so it can be unit-tested directly (see {@code AIFactoryTest}).
+   *
    * @param me entity to return if the no monster exist in the game
    * @return a random monster from the game or the given entity if no monster exists in the game.
    */
-  private static Entity randomMonsterOrMe(Entity me) {
+  static Entity randomMonsterOrMe(Entity me) {
     AtomicReference<Entity> r = new AtomicReference<>(me);
     randomMonster().ifPresent(r::set);
     return r.get();
