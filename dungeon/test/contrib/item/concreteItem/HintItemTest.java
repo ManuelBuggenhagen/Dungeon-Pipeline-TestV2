@@ -23,6 +23,7 @@ import core.utils.components.path.SimpleIPath;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -101,6 +102,12 @@ public class HintItemTest {
     assertSame(imagePath, item.imagePath());
     assertEquals("Test name", item.displayName());
     assertEquals("Test description", item.description());
+    assertEquals(
+        Optional.of(worldSprite.pathString()),
+        item.worldAnimation().sourcePath().map(IPath::pathString));
+    assertEquals(
+        Optional.of(worldSprite.pathString()),
+        item.inventoryAnimation().sourcePath().map(IPath::pathString));
   }
 
   /** Issue #156 U1: null imagePath with valid worldSprite throws NullPointerException. */
