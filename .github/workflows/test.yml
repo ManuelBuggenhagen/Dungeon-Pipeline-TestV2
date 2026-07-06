@@ -1,6 +1,7 @@
 name: Test with Code coverage
 on:
-  pull_request:
+    pull_request:
+    workflow_dispatch:
 
 jobs:
   test:
@@ -23,7 +24,7 @@ jobs:
 
       - name: Run tests and generate JaCoCo report
         run: ./gradlew clean test jacocoTestReport --continue
-      
+
       - name: Format coverage summary
         if: always()
         run: |
@@ -31,7 +32,7 @@ jobs:
             --min-line-coverage 25 \
             --warning-line-coverage 60 \
             --good-line-coverage 80
-      
+
       - name: Upload JaCoCo reports
         if: always()
         uses: actions/upload-artifact@v4
