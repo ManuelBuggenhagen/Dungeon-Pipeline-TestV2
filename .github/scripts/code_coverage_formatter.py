@@ -206,7 +206,7 @@ def package_matches(package_name, path_filter):
 
     return name == path_filter or name.startswith(path_filter + "/")
 
-
+#test
 def direct_child_key(package_name, path_filter):
     """Ordnet ein (passendes) Package seinem direkten Unterpfad unter path_filter zu.
 
@@ -292,13 +292,13 @@ def metric_label(metric):
 
 def build_branch_section(branch_name, base_branch, commit_sha):
     lines = []
-    
+
     lines.append("> [!IMPORTANT]")
     lines.append(f"> **Ergebnisse für Branch:** `{branch_name or 'unbekannt'}`")
 
     if base_branch:
         lines.append(f"> **Ziel-Branch:** `{base_branch}`")
-    
+
     if commit_sha:
         lines.append(f"> **Commit:** `{commit_sha[:7]}`")
 
@@ -471,9 +471,9 @@ def build_report_paths_section(report_files):
 
 
 def build_summary(
-        report_files, 
-        totals, 
-        module_results, 
+        report_files,
+        totals,
+        module_results,
         warning_threshold,
         good_threshold,
         branch_name=None,
