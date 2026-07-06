@@ -1,7 +1,6 @@
 name: Test with Code coverage
 on:
-    pull_request:
-    workflow_dispatch:
+  pull_request:
 
 jobs:
   test:
@@ -25,11 +24,23 @@ jobs:
       - name: Run tests and generate JaCoCo report
         run: ./gradlew clean test jacocoTestReport --continue
 
-      - name: Format coverage summary
+      - name: Format coverage summary & Local Quality Gate
         if: always()
+        # Grenzwerte extern ueber Repository Variables setzen
+        # (Settings -> Secrets and variables -> Actions -> Variables).
+        # Ist eine Variable nicht gesetzt, greift der Fallback (-1 = wird nicht geprueft).
+        env:
+          MIN_LINE:        ${{ vars.MIN_LINE        || -1 }}
+          MIN_BRANCH:      ${{ vars.MIN_BRANCH      || -1 }}
+          MIN_METHOD:      ${{ vars.MIN_METHOD      || -1 }}
+          MIN_CLASS:       ${{ vars.MIN_CLASS       || -1 }}
+          MIN_INSTRUCTION: ${{ vars.MIN_INSTRUCTION || -1 }}
+          MIN_COMPLEXITY:  ${{ vars.MIN_COMPLEXITY  || -1 }}
+          # Optionaler Paket-/Quellpfad-Prefix (z.B. 'de/dungeon/core').
+          # Ist die Variable nicht gesetzt, entfaellt der Zusatzblock im Summary.
+          COVERAGE_PATH:   ${{ vars.COVERAGE_PATH }}
         run: |
           python3 .github/scripts/code_coverage_formatter.py \
-            --min-line-coverage 25 \
             --warning-line-coverage 60 \
             --good-line-coverage 80
 
@@ -47,8 +58,10 @@ jobs:
       - name: Add coverage to PR
         if: github.event_name == 'pull_request'
         uses: madrapps/jacoco-report@v1.8.0
+        # Schwellen extern ueber Repository Variables setzen (-1 = keine Grenze).
+        # min-coverage-overall nutzt dieselbe Grenze wie das lokale LINE-Gate (MIN_LINE).
         with:
           paths: ${{ github.workspace }}/**/build/JacocoReports/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 25
-          min-coverage-changed-files: 40
+          min-coverage-overall: ${{ vars.MIN_LINE || -1 }}
+          min-coverage-changed-files: ${{ vars.MIN_CHANGED_FILES || -1 }}
