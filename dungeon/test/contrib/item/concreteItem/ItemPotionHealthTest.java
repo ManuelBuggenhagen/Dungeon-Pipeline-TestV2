@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import contrib.item.HealthPotionType;
-import contrib.item.Item;
-import java.lang.reflect.Field;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -36,10 +34,10 @@ class ItemPotionHealthTest {
     assertEquals(2, data.size());
     assertEquals(
       HealthPotionType.WEAK.name(),
-      data.get(itemDataKey("DATA_KEY_POTION_TYPE")));
+      data.get(TestableItemPotionHealth.potionTypeKey()));
     assertEquals(
       Integer.toString(HealthPotionType.WEAK.getHealAmount()),
-      data.get(itemDataKey("DATA_KEY_HEAL_AMOUNT")));
+      data.get(TestableItemPotionHealth.healAmountKey()));
   }
 
   @Test
@@ -87,16 +85,6 @@ class ItemPotionHealthTest {
     assertEquals(potion1.hashCode(), potion2.hashCode());
   }
 
-  private static String itemDataKey(String fieldName) {
-    try {
-      Field field = Item.class.getDeclaredField(fieldName);
-      field.setAccessible(true);
-      return (String) field.get(null);
-    } catch (ReflectiveOperationException e) {
-      throw new AssertionError("Could not read item data key: " + fieldName, e);
-    }
-  }
-
   private static HealthPotionType typeWithDifferentHealAmount() {
     for (HealthPotionType type : HealthPotionType.values()) {
       if (type.getHealAmount() != HealthPotionType.WEAK.getHealAmount()) {
@@ -104,5 +92,20 @@ class ItemPotionHealthTest {
       }
     }
     throw new AssertionError("No HealthPotionType with different heal amount found.");
+  }
+
+  private static class TestableItemPotionHealth extends ItemPotionHealth {
+
+    private TestableItemPotionHealth(HealthPotionType type) {
+      super(type);
+    }
+
+    private static String potionTypeKey() {
+      return DATA_KEY_POTION_TYPE;
+    }
+
+    private static String healAmountKey() {
+      return DATA_KEY_HEAL_AMOUNT;
+    }
   }
 }
